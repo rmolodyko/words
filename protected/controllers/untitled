@@ -1,0 +1,18 @@
+$text = rawurlencode($t);
+		//$text = $t; 
+		if(count(explode("%20",$text)) > 1){
+			echo 'lvl';
+			$homepage = file_get_contents("https://translate.google.ru/translate_a/single?client=t&sl=en&tl=ru&hl=uk&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at&ie=UTF-8&oe=UTF-8&otf=2&srcrom=0&ssel=0&tsel=0&kc=1&tk=520684|783087&q=".$text);
+		}else{
+			echo 'lvl2';
+			$homepage = file_get_contents('http://translate.google.ru/translate_a/single?client=t&hl=en&sl=en&tl=ru&ie=UTF-8&oe=UTF-8&otf=1&ssel=0&tsel=0&kc=5&tk=520683|936073&q='.$t.'&dt=bd');
+		}
+		
+		//echo $text;
+
+		echo '<pre>';
+		echo $homepage;
+		echo '</pre>';
+
+		$result = '';
+		$this->render('show',['data'=>$result]);
