@@ -81,7 +81,6 @@ class WordController extends Controller
 		}else{
 			$new_word = new Word();
 			$new_word->word = $word;
-			$new_word->status= 0;
 			$new_word->ts = time();
 			$new_word->id_set = (int)$set;
 			if(!$new_word->save()){

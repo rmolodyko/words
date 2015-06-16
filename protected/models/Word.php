@@ -26,8 +26,8 @@ class Word extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('word, status, ts, id_set', 'required'),
-			array('status, ts', 'numerical', 'integerOnly'=>true),
+			array('word, ts, id_set', 'required'),
+			array('ts', 'numerical', 'integerOnly'=>true),
 			array('word', 'length', 'max'=>80),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -53,7 +53,6 @@ class Word extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'word' => 'Word',
-			'status' => 'Status',
 		);
 	}
 

@@ -12,7 +12,7 @@
 		<div class="c-list-links">
 			<ul>
 				<li><a href="/?r=set/show">set</a></li>
-				<li><a href="?r=site/set">training</a></li>
+				<li><a href="?r=train">training</a></li>
 				<li>
 					<?php 
 						if(!Yii::app()->user->isGuest){
