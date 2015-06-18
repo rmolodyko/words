@@ -44,9 +44,10 @@ class WordController extends Controller
 		$data = [];
 		foreach ($result1 as $k=> $v){
 			$translate = Translate::model()->findAllByAttributes(['id_word'=>$v->id]);
-			$data[$v->word] = [];
+			$status = ($v->status_wt&&$v->status_tw&&$v->status_spell&&$v->status_spell) ? "true" : "false";
+			$data[$v->word] = ["tr"=>[],"status"=>$status,'id'=>$v->id];
 			foreach ($translate as $key => $value){
-				$data[$v->word][] = $value->translate;
+				$data[$v->word]["tr"][] = $value->translate;
 			}
 		}
 		//print_r($data);
@@ -122,5 +123,14 @@ class WordController extends Controller
 			}
 		}
 		throw new Exception("Error Processing Request", 1);
+	}
+
+	public function actionSetStatus($is_clear,$data){
+		$data = json_decode($data);
+		$new_status = $is_clear=="false"?false:true;
+		$criteria = new CDbCriteria;
+		$criteria->addInCondition("id",$data);
+		$res = Word::model()->updateAll(['status_tw'=>$new_status,'status_wt'=>$new_status,'status_speech'=>$new_status,'status_spell'=>$new_status], $criteria);
+		die('["ok"]');
 	}
 }

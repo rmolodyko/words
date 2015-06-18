@@ -120,6 +120,7 @@ body{
 	padding: 10px 0;
 	border-bottom: 1px dotted #A6A6A6;
 	padding-left: 5px;
+	position: relative;
 }
 
 .list-word .c-word-item div{
@@ -251,6 +252,12 @@ body{
 	display: inline;
 }
 
+.list-word .c-word-item .status{
+	position: absolute;
+	top: 11px;
+	right: 20px;
+}
+
 .list-word .c-word-item .remove{
 	float: right;
 	display: none;
@@ -318,7 +325,7 @@ body{
 	display: block;
 }
 
-#cancel,#sound-btn,#commit{
+#cancel,#sound-btn,#commit,.show-status{
 	background-image: url('/public/img/buttons11.png');
 	width: 25px;
 	height: 25px;
@@ -375,6 +382,8 @@ body{
 	background-color: #eee;
 	padding: 5px;
 	border: 1px solid #C2C2C2;
+	height: 33px;
+	line-height: 33px;
 }
 
 .top-check .check-all-word,.top-check .checked-words,.top-check .vvcount-words{
@@ -391,50 +400,112 @@ body{
 
 .train{
 	margin-top: 25px;
+	height: 390px;
+	background-color: #fff;
 }
 
-.train>a{
-	border:1px solid;
-	margin: 1%;
+.train>div{
+	margin: 2%;
 	text-align: center;
+	position: relative;
+	background-color: #eee;
+	box-shadow: 0 2px 2px 1px #d8d8d0;
+	cursor: pointer;
+}
+
+.train>div:first-child{
+	cursor:default;
+}
+
+.train>div .title{
+	width: 100%;
+	position: absolute;
+	height: 30px;
+	bottom: 0px;
+	left: 0px;
+	line-height: 30px;
+	background-color: #E0E0E0;
+}
+
+.train>div:hover .title{
+	background-color: #C5DFE2;
+}
+
+.train>div .fill{
+	position: absolute;
+	width: 110px;
+	height: 110px;
+	display: block;
+	left: 27%;
+	top: 12px;
+}
+
+.train .c-left-full .fill{
+	top: 25%;
+	left: 20%;
+	background-position: -414px -116px;
+	width: 163px;
+	background-size: 1188px 317px;
+	height: 150px;
 }
 
 .train .c-top-panel{
 	width: 98%;
-	height: 40px;
+	padding: 4px;
+	margin: 2% 1%;
+	text-align: left;
 }
 
 .train .c-left-full{
 	width: 34%;
-	height: 316px;
+	height: 334px;
+	margin-left: 3%;
 }
 
 .train .c-wt{
-	width: 30%;
+	width: 26%;
 	height: 150px;
-	line-height: 150px;
 	text-align: center;
 }
 
+
+.train .c-tw .fill{
+	background-size: 1050px 283px;
+	background-position: -370px 0px;
+	height: 103px;
+}
+
 .train .c-tw{
-	width: 30%;
+	width: 26%;
 	height: 150px;
+}
+
+.train .c-speech .fill{
+	background-position: -255px 0;
+	height: 98px;
 }
 
 .train .c-speech{
-	width: 30%;
+	width: 26%;
 	height: 150px;
 }
 
+.train .c-spell .fill{
+	background-position: -648px 0;
+	width: 100px;
+	height: 100px;
+}
+
 .train .c-spell{
-	width: 30%;
+	width: 26%;
 	height: 150px;
 }
 
 #select-sets{
-	padding: 5px;
-	width: 34%;
+	padding: 6px;
 	margin: 5px;
+	width: 35%;
+	margin-left: 2%;
 }
 
 .train-container{
@@ -675,4 +746,60 @@ body{
 
 .btn:active{
 	background: #538CBA
+}
+
+
+.train div .fill{
+	background-image: url("/public/img/ling.png");
+	background-position: 0 0;
+	background-size: 1046px 276px;
+	background-repeat: no-repeat;
+}
+
+.sel{
+	-webkit-appearance: button;
+	appearance: button;
+	background: url('/public/img/select.png') 100% no-repeat whiteSmoke;
+	background-position-x: 255px;
+	background-position-y: center;
+	border: 1px solid gainsboro;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	font-size: 13px;
+	line-height: 20px;
+	outline: none;
+	padding: 5px 0;
+	width: 180px;
+	cursor: pointer;
+}
+
+.inpt{
+	/*font: 13px/1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";*/
+	color: #333;
+	font-size: 12px;
+}
+
+.btns-top{
+	display: none;
+	margin-left: 15px;
+}
+
+.btns-top .btn, .learn-word{
+	padding: 5px;
+	width: 100px;
+}
+
+.learn-word{
+	float: right;
+}
+
+.c-word-item .show-status{
+	position: absolute;
+	top: 10px;
+	right: 20px;
+	left: initial;
+	background-position: -533px -1px;
+	background-size: 775px 22px;
+	width: 20px;
+	height: 20px;
 }

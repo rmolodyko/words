@@ -5,8 +5,8 @@ class TrainController extends Controller
 	public $layout='main';
 	public $defaultAction = 'show';
 
-	private $limitWTWordOnPage = 3;
-	private $limitWTTranslateOnPage = 4;
+	private $limitWTWordOnPage = 10;
+	private $limitWTTranslateOnPage = 5;
 
 	public function accessRules()
     {
@@ -49,16 +49,46 @@ class TrainController extends Controller
 			$criteriaTR->select = array('id','translate');
 			$criteriaTR->order = 'RAND()';
 			$criteriaTR->addCondition('id_set = '.((int)$set).' AND id_word != '.$v->id);
-			$trRand = Translate::model()->findAll($criteriaTR);	
+			$trRand = Translate::model()->findAll($criteriaTR);
 			$trArray = [];
 			foreach ($trRand as $key => $value){
 				$trArray[] = ['id'=>$value->id,'tr'=>$value->translate,'is_true'=>"wrong"];
 			}
 			$trTrue = Translate::model()->findByAttributes(['id_set'=>(int)$set,'id_word'=>$v->id]);
+
 			$trTrue = ['id'=>$trTrue->id,'tr'=>$trTrue->translate,'is_true'=>"right"];
 			$trArray[] = $trTrue;
 			shuffle($trArray);
 			$result[] = ['type'=>'wt','data'=>['id'=>$v->id,'word'=>$v->word,'translate'=>$trArray]];
+		}
+		return json_encode($result);
+	}
+
+	public function createTW($set){
+		$criteria = new CDbCriteria;
+		$criteria->limit = $this->limitWTWordOnPage;
+		$criteria->select = array('id','word');
+		$criteria->order = 'RAND()';
+		$criteria->addCondition('id_set = '.((int)$set).' AND status_wt = 0');
+
+		$word = Word::model()->findAll($criteria);
+		$result = [];
+		foreach ($word as $k=>$v){
+			$trMain = Translate::model()->findByAttributes(['id_set'=>(int)$set,'id_word'=>$v->id]);
+			$criteriaTR = new CDbCriteria;
+			$criteriaTR->limit = $this->limitWTTranslateOnPage-1;
+			$criteriaTR->select = array('id','word');
+			$criteriaTR->order = 'RAND()';
+			$criteriaTR->addCondition('id_set = '.((int)$set).' AND id != '.$v->id);
+			$trRand = Word::model()->findAll($criteriaTR);
+			$trArray = [];
+			foreach ($trRand as $key => $value){
+				$trArray[] = ['id'=>$value->id,'word'=>$value->word,'is_true'=>"wrong"];
+			}
+			$trTrue = ['id'=>$v->id,'word'=>$v->word,'is_true'=>"right"];
+			$trArray[] = $trTrue;
+			shuffle($trArray);
+			$result[] = ['type'=>'tw','data'=>['id'=>$trMain->id,'translate'=>$trMain->translate,'word'=>$trArray]];
 		}
 		return json_encode($result);
 	}
@@ -69,9 +99,14 @@ class TrainController extends Controller
 		$this->render('wt',['data'=>$data,'set_name'=>$set->title]);
 	}
 
+	public function actionTw($set){
+		$data = $this->createTW($set);
+		$set = Set::model()->findByAttributes(['id'=>(int)$set]);
+		$this->render('wt',['data'=>$data,'set_name'=>$set->title]);
+	}
+
 	public function actionSave($data){
 		$data = json_decode($data);
-
 		foreach($data as $key => $value){
 			$word = Word::model()->findByAttributes(["id"=>$value->word_id]);
 			$word->status_wt = (int)$value->answ;

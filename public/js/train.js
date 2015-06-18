@@ -121,6 +121,34 @@ checkoutWT = function(e){
 	}
 }
 
+checkoutTW = function(e){
+	var el = $(e);
+	var idword = $('.c-left-train>div').attr('data-wordid');
+	
+	if(el.attr('data-isbtn') == 'true'&&!checkoutWT.is_click){
+		falseAnsw(idword);
+		console.log('next-train');
+		checkoutWT.is_click = true;
+		$('.next-train').addClass('too');
+	}else{
+		if(!checkoutWT.is_click){
+			var is_true = el.attr('data-istrue');
+			checkoutWT.is_click = true;
+			if(is_true == "right"){
+				console.log('true');
+				trueAnsw(idword);
+			}else{
+				falseAnsw(idword,e);
+			}
+			$('.next-train').addClass('too');
+		}else{
+			console.log("next");
+			$('.next-train').removeClass('too');
+			go();
+		}
+	}
+}
+
 global.liveSound = function(e){
 	var word = $(e).parent().parent().find('.title').text();
 	if(word != '')

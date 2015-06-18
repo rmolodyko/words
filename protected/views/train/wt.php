@@ -18,6 +18,19 @@
 		</ul>
 	</div>
 </script>
+<script type="text/x-jquery-tmpl" id="tmpl-tw">
+	<div class="c-left-train">
+		<div data-wordid="${id}"><span class="st" onclick="global.liveSound(this)"></span><span class="title">${word}</span></div>
+	</div>
+	<div class="c-right-train">
+		<ul>
+			{{each translate}}
+				<li><a href="javascript:void(0)" class="li-train" onclick="checkoutWT(this)" data-translateid="${$value.id}" data-istrue="${$value.is_true}">${$value.tr}</a></li>
+			{{/each}}
+			<li><a href="javascript:void(0)" class="next-train hblue" data-isbtn="true" onclick="checkoutWT(this)"><span class="no-idea">I have no idea</span><span class="next-tr">next</span> →</a></li>
+		</ul>
+	</div>
+</script>
 <script type="text/x-jquery-tmpl" id="tmpl-show-res">
 	<div class="c-res-tr">
 		{{each data}}

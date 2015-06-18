@@ -3,20 +3,19 @@
 $(document).ready(function(){
 
 	var translateArray = [];
+	var selectArray = [];
 
 	globalset.focusTitle();
-	
-
-
+	$('#translate').focus();
 	drawAllWords(window.global.DATA);
 	function drawAllWords(data){
 		for(var k in data){
-			addNewItem(k,data[k]);
+			addNewItem(k,data[k]['tr'],data[k]['status'],data[k]['id']);
 		}
 	}
 
-	function addNewItem(word,data){
-		$('.list-word').prepend(viewAllWords(word,data));
+	function addNewItem(word,data,status,id){
+		$('.list-word').prepend(viewAllWords(word,data,status,id));
 		translateArray = translateArray.concat(data);
 	}
 
@@ -123,17 +122,43 @@ $(document).ready(function(){
 			var resp = JSON.parse(html);
 			if(resp[0] == 'ok'){
 				if(window.global.DATA[word] != undefined){
-					window.global.DATA[word].push(tr);
+					window.global.DATA[word]['tr'].push(tr);
 				}else{
-					var el = {};
-					el[word] = [tr];
-					window.global.DATA[word] = [tr];
+					window.global.DATA[word]['tr'] = [tr];
 					addCount();
 				}
-				$('#commit').click();
-				$('.list-word').empty();
-				drawAllWords(window.global.DATA);
-				$('#translate').focus();
+				updateAllWord();
+			}
+		});	
+	}
+
+	function updateAllWord(){
+		selectArray = [];
+		$('#selectedInput').text(0);
+		$('#checkAll').attr('checked', false);
+		$('#commit').click();
+		$('.list-word').empty();
+		drawAllWords(window.global.DATA);
+		$('#translate').focus();
+	}
+
+	global.setStatus = function(is_clear){
+		$.ajax({
+		  url: "/?r=word/setStatus",
+		  data: {'is_clear':is_clear,'data':JSON.stringify(selectArray)},
+		  cache: false
+		})
+		.done(function(html){
+			var resp = JSON.parse(html);
+			if(resp[0] == 'ok'){
+				for(var i in window.global.DATA){
+					var obj = window.global.DATA[i];
+					var num = parseInt(obj['id']);
+					if(-1 != $.inArray(num,selectArray)){
+						obj['status'] = ""+is_clear;
+					}
+				}
+				updateAllWord();
 			}
 		});	
 	}
@@ -147,11 +172,10 @@ $(document).ready(function(){
 		.done(function(html){
 			var resp = JSON.parse(html);
 			if(resp[0] == 'ok'){
-				if(window.global.DATA[word] != undefined){
-					var index = window.global.DATA[word].indexOf(tr);
-					window.global.DATA[word].splice(index, 1);
+				if(window.global.DATA[word]['tr'] != undefined){
+					var index = window.global.DATA[word]['tr'].indexOf(tr);
+					window.global.DATA[word]['tr'].splice(index, 1);
 				}
-				console.log(window.global.DATA);
 				$('#cancel').click();
 				$('.list-word').empty();
 				drawAllWords(window.global.DATA);
@@ -172,7 +196,6 @@ $(document).ready(function(){
 				if(window.global.DATA[word] != undefined){
 					delete window.global.DATA[word];
 				}
-				console.log('new',window.global.DATA);
 				$('#cancel').click();
 				$('.list-word').empty();
 				drawAllWords(window.global.DATA);
@@ -181,7 +204,31 @@ $(document).ready(function(){
 		});	
 	}
 
-	function viewAllWords(word,trans){
+	global.selectWord = function(el){
+		var el = $(el);
+		var id = parseInt(el.attr('data-wordid'));
+		if(el.is(":checked")){
+			selectArray.push(id);
+		}else{
+			var index = selectArray.indexOf(id);
+			selectArray.splice(index, 1);
+		}
+		var count = selectArray.length;
+		$('#selectedInput').text(count);
+		if(count > 0){
+			$('.btns-top').css('display','inline-block');
+		}else{
+			$('.btns-top').css('display','none');
+		}
+	}
+
+	global.checkAll = function(){
+		$('.list-word .c-word-item .check-field input').click();
+	}
+
+
+	//Переписать представление с помощью библиотеки JQuery.tmpl
+	function viewAllWords(word,trans,status,id){
 		var tr = '';
 		function hoverTr(set,word,tr){
 			return '<a href="javascript:void(0)" onclick="global.del_tr(\''+global.SET+'\',\''+word+'\',\''+tr+'\')">(-)</a>';
@@ -190,13 +237,14 @@ $(document).ready(function(){
 			tr += '<span>'+trans[k]+hoverTr(global.SET,word,trans[k])+'</span>, ';
 		}
 		tr = tr.substring(0,tr.length-2);
-		var str = '<div class="c-word-item">';
-			str += '<div class="check-field"><input type="checkbox"></div>';
+		var str = '<div class="c-word-item" data-wordid="'+id+'">';
+			str += '<div class="check-field"><input type="checkbox" onclick="global.selectWord(this)" data-wordid="'+id+'"></div>';
 			str += '<div class="voice-field">&nbsp;<span onclick="global.liveSound(this)"></span></div>';
 			str += '<div class="title">'+word+'</div>';
 			str += '<div class="separator">—</div>';
 			str += '<div class="translate">'+tr+'</div>';
 			str += '<div class="remove"><a href="javascript:void(0)" onclick="global.del_word(\''+global.SET+'\',\''+word+'\')">(-)</a></div>';
+			str += '<div class="status '+(status == 'true'?'show-status':'')+'">&nbsp;</div>';
 			str += '</div>';
 		return str;
 	}

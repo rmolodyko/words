@@ -21,7 +21,7 @@
     <div class="c-right">
         <div class="panel-translate">
             <div class="field-input">
-                <input type="text" id="translate" placeholder="search">
+                <input type="text" id="translate" placeholder="search" class="inpt">
                 <div id="commit">&nbsp;</div>
                 <div id="cancel">&nbsp;</div>
                 <div id="sound-btn">&nbsp;</div>
@@ -38,9 +38,14 @@
             </div>
         </div>
         <div class="top-check">
-            <div class="check-all-word"><input type="checkbox"></div>
-                <div class="checked-words"><span>0</span></div>
+            <div class="check-all-word"><input type="checkbox" id="checkAll" onclick="global.checkAll()"></div>
+                <div class="checked-words"><span id="selectedInput">0</span></div>
                 <div class="count-words">/ <span id="count"><?=$countRecords?></span></div>
+                <div class="btns-top">
+                    <div class="hblue btn" onclick="global.setStatus(false)">train</div>
+                    <div class="hblue btn" onclick="global.setStatus(true)" style="width: 160px;">move in the study</div>
+                </div>
+                <div class="hblue btn learn-word" onclick="window.location.assign('/?r=train/show&set=<?=$_GET['set']?>')">train set</div>
             </div>
         <div class="list-word grid">
         </div>
