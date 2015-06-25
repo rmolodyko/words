@@ -54,7 +54,7 @@ return array(
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),*/
-		'log'=>array(
+		/*'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
 				'db' => array(
@@ -67,9 +67,9 @@ return array(
 				array(
 					'class'=>'CWebLogRoute',
 				),
-				*/
+				* /
 			),
-		),
+		),*/
 	),
 
 	'modules'=>array(

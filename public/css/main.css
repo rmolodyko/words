@@ -558,7 +558,7 @@ body{
 	background-color: #eee;
 }*/
 
-.train-container .c-left-train .st{
+.train-container .c-left-train .st,.st{
 	background-image: url('/public/img/buttons11.png');
 	width: 23px;
 	height: 22px;
@@ -802,4 +802,82 @@ body{
 	background-size: 775px 22px;
 	width: 20px;
 	height: 20px;
+}
+
+.c-block1-train,.c-block2-train,.c-block3-train{
+	width: 100%;
+	margin: 20px 0;
+}
+
+.c-block1-train .title{
+	text-align: center;
+	font-size: 21px;
+}
+
+.c-block2-train .input1{
+	text-align: center;
+}
+
+.c-block2-train .input1 input{
+	padding: 10px;
+	width: 390px;
+	font-size: 20px;
+	color: #414141;
+	border-radius: 5px;
+	border: 1px solid #CACACA;
+	text-align: center; 
+}
+
+.c-block3-train{
+	text-align: center;
+}
+
+.c-block1-train .logo a{
+	height: 113px;
+	background-image: url('/public/img/ling.png');
+	width: 75px;
+	background-position: -118px 0px;
+	background-size: 1177px 274px;
+	display: block;
+	margin: 30px auto 0;
+}
+
+.c-block1-train .logo,.c-block1-train.status-logo .title{
+	display: none;
+}
+
+.c-block1-train.status-logo .logo{
+	display: block;
+}
+
+.c-block2-train .true-word{
+	text-align: center;
+	font-size: 22px;
+}
+
+.c-block2-train .true-word .true{
+	color: #41663B;
+	margin: 0 0 12px;
+	display: inline-block;
+	margin: auto;
+	width: initial;
+	position: relative;
+}
+
+.c-block2-train .true-word .false{
+	color: #C51515;
+	text-decoration: line-through;
+	display: none;
+}
+
+.c-block2-train .true-word.wrong .false{
+	display: block;
+	margin-top: 10px;
+}
+
+.c-block2-train .true-word .true .sound1{
+	display: inline-block;
+	position: absolute;
+	left: -40px;
+	top: 3px;
 }

@@ -7,10 +7,10 @@
 				window.location.assign("/?r=train/full&set="+set);
 			break;
 			case 'c-wt':
-				window.location.assign("/?r=train/wt&set="+set);
+				window.location.assign("/?r=train/do&mode=wt&set="+set);
 			break;
 			case 'c-tw':
-				window.location.assign("/?r=train/tw&set="+set);
+				window.location.assign("/?r=train/do&mode=tw&set="+set);
 			break;
 			case 'c-speech':
 				window.location.assign("/?r=train/speech&set="+set);

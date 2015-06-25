@@ -113,6 +113,7 @@ $(document).ready(function(){
 		var word = $('#translate').val().trim();
 		var tr = $(data).text().trim();
 		var set1 = parseInt(window.global.SET);
+		console.log(word);
 		$.ajax({
 		  url: "/?r=word/setTranslate",
 		  data: {'set':set1,'word':word,'translate':tr},
@@ -124,6 +125,7 @@ $(document).ready(function(){
 				if(window.global.DATA[word] != undefined){
 					window.global.DATA[word]['tr'].push(tr);
 				}else{
+					window.global.DATA[word] = [];
 					window.global.DATA[word]['tr'] = [tr];
 					addCount();
 				}
