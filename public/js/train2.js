@@ -7,7 +7,7 @@ window.ControlWrite = Spine.Controller.create({
 		"#current-num": "num",
 		".st": "soundBtn",
 		"#all-num": "numAll",
-		
+		"#speech span": "speechSpan",
 
 		"#input": 'input',
 
@@ -22,6 +22,7 @@ window.ControlWrite = Spine.Controller.create({
 		"click #ok": "ok",
 		"click .next-train": "reload",
 		"click .st": "sound",
+		"click #speech": "speech",
 	},
 
   	proxied: ["render","template","next","init","showResult"],
@@ -52,13 +53,18 @@ window.ControlWrite = Spine.Controller.create({
 
   	next: function(){
   		var item = this.model.all()[this.count];
+  		item = $.extend({'status':(this.mode == 'vr' ? true : false)},item);
   		this.template(item,this.tmplMethod);
-  		this.input.focus();
   		this.num.text(this.count+1);
+
+  		if(this.mode == 'vr'){
+  			this.speech();
+  		}
 
   		if(this.count == 0){
   			this.numAll.text(this.model.all().length);
   		}
+  		this.input.focus();
   	},
 
   	check: function(){
@@ -123,6 +129,11 @@ window.ControlWrite = Spine.Controller.create({
 				self.refreshElements();
 			}
 		});
+ 	},
+
+ 	speech: function(){
+		this.sound(null,this.speechSpan.text());
+		this.input.focus();
  	},
 
  	sound: function(e,word){

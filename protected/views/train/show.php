@@ -13,10 +13,10 @@
 				window.location.assign("/?r=train/do&mode=tw&set="+set);
 			break;
 			case 'c-speech':
-				window.location.assign("/?r=train/speech&set="+set);
+				window.location.assign("/?r=train/do&mode=vr&set="+set);
 			break;
 			case 'c-spell':
-				window.location.assign("/?r=train/spell&set="+set);
+				window.location.assign("/?r=train/do&mode=tr&set="+set);
 			break;
 		}
 	}

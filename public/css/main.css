@@ -881,3 +881,7 @@ body{
 	left: -40px;
 	top: 3px;
 }
+
+.c-block1-train #speech span{
+	display: none;
+}

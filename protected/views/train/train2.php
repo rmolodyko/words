@@ -19,7 +19,8 @@
 		</div>
 		<div class="c-block2-train">
 			<div class="true-word  ${status?'':'wrong'}">
-				<div class="true"><span class="sound1">&nbsp;<span class="st"></span></span><span class="title">${word}</span></div>
+				<div class="true"><span class="sound1">&nbsp;<span class="st"></span></span>
+									<span class="title">${word}</span></div>
 				<div class="false">${wrong}</div>
 			</div>
 		</div>
@@ -30,11 +31,11 @@
 
 	<script type="text/x-jquery-tmpl" id="tmpl-vr">
 		<!-- status-logo have to write when use speech mode -->
-		<div class="c-block1-train status1-logo">
+		<div class="c-block1-train ${(status ? 'status-logo' : '')}">
 			<div class="title">
 				{{each second}}${($index == 0 ? '':', ')+$value}{{/each}}
 			</div>
-			<div class="logo"><a href="javascript:void(0);">&nbsp;</a></div>
+			<div class="logo"><a href="javascript:void(0);" id="speech">&nbsp;<span>${first}</span></a></div>
 		</div>
 		<div class="c-block2-train">
 			<div class="input1"><input type="text" name="input" id="input"></div>

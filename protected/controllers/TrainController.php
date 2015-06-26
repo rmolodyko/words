@@ -162,10 +162,10 @@ class TrainController extends Controller
 					$word->status_tw = (int)$value->answ;
 					break;
 				case 'vr':
-					$word->status_spell = (int)$value->answ;
+					$word->status_speech= (int)$value->answ;
 					break;
 				case 'tr':
-					$word->status_speech = (int)$value->answ;
+					$word->status_spell = (int)$value->answ;
 					break;
 				default:
 					throw new Exception("Error Processing Request", 1);
