@@ -1,3 +1,4 @@
+<script src="public/js/jquery.tmpl.min.js"></script>
 <script src="public/js/helper.js"></script>
 <script src="public/js/spine.js"></script>
 <script src="public/js/spine.controller.manager.js"></script>
@@ -5,8 +6,14 @@
 <script src="public/js/spine.model.local.js"></script>
 <script src="public/js/spine.list.js"></script>
 <script src="public/js/sound.js"></script>
-<script src="public/js/train2.js"></script>
-<script src="public/js/jquery.tmpl.min.js"></script>
+<script src="public/js/train/TrainAbstract.js"></script>
+<script src="public/js/train/TrainSuper.js"></script>
+<script src="public/js/train/TrainSound.js"></script>
+<script src="public/js/train/TrainSW.js"></script>
+<script src="public/js/train/TrainPW.js"></script>
+<script src="public/js/train/TrainSingle.js"></script>
+<script src="public/js/train/TrainMulti.js"></script>
+<script src="public/js/train/init.js"></script>
 
 
 <div class="control">

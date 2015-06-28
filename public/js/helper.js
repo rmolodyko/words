@@ -7,4 +7,8 @@ window.getQueryVariable = function getQueryVariable(variable){
             return decodeURIComponent(pair[1]);
         }
     }
+};
+
+window.getSub = function(parent,subclass){
+	return $.extend({},parent,subclass);
 }

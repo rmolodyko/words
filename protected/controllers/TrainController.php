@@ -132,9 +132,9 @@ class TrainController extends Controller
 		$criteria->limit = $this->limitWTWordOnPage;
 		$criteria->select = array('id','word');
 		$criteria->order = 'RAND()';
-		if($mode == 'vr'){
+		if($mode == 'sw'){
 			$criteria->addCondition('id_set = '.((int)$set).' AND status_speech = 0');
-		}else if($mode == 'tr'){
+		}else if($mode == 'pw'){
 			$criteria->addCondition('id_set = '.((int)$set).' AND status_spell = 0');
 		}
 		$word = Word::model()->findAll($criteria);
