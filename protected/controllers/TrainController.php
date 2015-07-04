@@ -38,9 +38,9 @@ class TrainController extends Controller
 	{
 		$set = Set::model()->findByAttributes(['id'=>(int)$set]);
 		if($mode == 'wt' || $mode == 'tw'){
-			$this->render('train',['set_name'=>$set->title]);
+			$this->render('train3',['set_name'=>$set->title]);
 		}else{
-			$this->render('train2',['set_name'=>$set->title]);
+			$this->render('train3',['set_name'=>$set->title]);
 		}
 	}
 
