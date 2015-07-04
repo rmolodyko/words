@@ -36,7 +36,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=twords',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => 'muha1990',
+			'password' => '',
 			'charset' => 'utf8',
 			'tablePrefix' => 'tbl_',
 			'enableProfiling' => true,
