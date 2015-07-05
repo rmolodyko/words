@@ -12,22 +12,16 @@ if(window.Train == undefined) window.Train = {};
  * @param mode
  * @param setId
  */
-window.Train.iterateClass = function(mode,setId){
+window.Train.multiIterateClass = function(mode,setId){
 
-	this.mode = mode;
-	this.set = setId;
-	this.counter = 0;
+	function constructor(){};
+	constructor.prototype = new Train.iterateAbstract(mode,setId);
+	var klass = new constructor();
 
-	//Transmits current context into calls function instead context of default
-	this.proxy = function(fn){
-		var self = this;
-		return function(){
-			fn.apply(self,arguments);
-		}
-	};
+	Train.multiIterateClass.prototype = new Train.iterateAbstract(mode,setId);
 
 	//Iterates the data and calls the form
-	this.iterate = function(){
+	klass.iterate = function(){
 
 		//Gets single item from data object
 		try{
@@ -42,25 +36,8 @@ window.Train.iterateClass = function(mode,setId){
 		this.trainObj.run(data);
 	};
 
-	//Method is called when single page will be ended
-	this.edge = function(results){
-		l('end of train for mode = '+this.mode,results);
-		$.publish('iterate');
-	};
-
-	//Method returns instance of appropriate class
-	//All new instances have to call without any params
-	this.getTrainObject = function(){
-		switch(this.mode){
-			case 'wt':{
-				return (new Train.trainWtClass());
-			}
-		}
-		return null;
-	};
-
 	//Calls when the application will be started
-	this.setup = function(e,response){
+	klass.setup = function(e,response){
 		this.data = new Train.dataClass(response);
 		Train.data = this.data;
 
@@ -78,7 +55,7 @@ window.Train.iterateClass = function(mode,setId){
 	};
 
 	//Sets up handler on the beginning work and configuring
-	$.subscribe('run',this.proxy(this.setup));
-}/**
- * Created by rmolodyko on 05.07.15.
- */
+	$.subscribe('run',klass.proxy(klass.setup));
+
+	return klass;
+}

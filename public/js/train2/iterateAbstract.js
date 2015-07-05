@@ -42,7 +42,4 @@ window.Train.iterateAbstract = function(mode,setId){
 		}
 		return null;
 	};
-
-	//Sets up handler on the beginning work and configuring
-	$.subscribe('run',this.proxy(this.setup));
 }
