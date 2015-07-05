@@ -73,7 +73,7 @@ class TrainController extends Controller
 				$trTrue = ['id'=>$trTrue->id,'item'=>$trTrue->translate,'is_true'=>"right"];
 				$trArray[] = $trTrue;
 				shuffle($trArray);
-				$result[] = ['id'=>$v->id,'first'=>$v->word,'second'=>$trArray];
+				$result[$v->id] = ['id'=>$v->id,'first'=>$v->word,'second'=>$trArray];
 			}else if($mode == 'tw'){
 				$trMain = Translate::model()->findByAttributes(['id_set'=>(int)$set,'id_word'=>$v->id]);
 				$criteriaTR = new CDbCriteria;

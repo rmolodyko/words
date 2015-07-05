@@ -8,7 +8,7 @@
 if(window.Train == undefined) window.Train = {};
 
 /**
- * Class for iterating data and switching train pages
+ * Class for showing views and handling results of training
  * @param mode
  * @param setId
  */
@@ -19,10 +19,12 @@ window.Train.trainWtClass = function(){
 		this.handler = handler;
 	}
 	this.run = function(data){
-		l(data);
+		l('start train for mode = wt',data);
 		this.someMethod(data);
 	}
 	this.someMethod = function(data){
-		this.handler(data);
+		var randNumber = Math.floor((Math.random() * 10) + 1);
+		randNumber = (randNumber >= 5) ? true : false;
+		this.handler({'id':data.id,'result':randNumber});
 	}
 }

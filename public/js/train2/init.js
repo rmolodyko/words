@@ -9,7 +9,6 @@ $(document).ready(function(){
 	l('hello world',1);
 	var mode = 'wt';
 	var sett = 1;
-
 	(new Train.iterateClass(mode,sett));
 	(new Train.loadClass(mode,sett)).load();
 });

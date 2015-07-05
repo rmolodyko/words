@@ -11,6 +11,7 @@
 <script src="public/js/train2/trainAbstract.js"></script>
 <script src="public/js/train2/pubsub.js"></script>
 <script src="public/js/train2/loadClass.js"></script>
+<script src="public/js/train2/dataClass.js"></script>
 <script src="public/js/train2/iterateClass.js"></script>
 <script src="public/js/train2/trainWtClass.js"></script>
 <script src="public/js/train2/init.js"></script>
