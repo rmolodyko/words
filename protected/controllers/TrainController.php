@@ -5,6 +5,14 @@ class TrainController extends Controller
 	public $layout='main';
 	public $defaultAction = 'show';
 
+	const MODE_WORD_TO_TRANSLATE = 'wt';
+	const MODE_TRANSLATE_TO_WORD = 'tw';
+	const MODE_SPEECH = 'sw';
+	const MODE_SPELL = 'pw';
+	const MODE_BRAIN_STORM = 'bs';
+
+	public $allowModes = [self::MODE_TRANSLATE_TO_WORD,self::MODE_SPELL,self::MODE_SPEECH,self::MODE_WORD_TO_TRANSLATE];
+
 	private $limitWTWordOnPage = 10;
 	private $limitWTTranslateOnPage = 5;
 
@@ -37,117 +45,132 @@ class TrainController extends Controller
 	public function actionDo($set,$mode)
 	{
 		$set = Set::model()->findByAttributes(['id'=>(int)$set]);
-		if($mode == 'wt' || $mode == 'tw'){
+		if($mode == self::MODE_WORD_TO_TRANSLATE || $mode == self::MODE_TRANSLATE_TO_WORD){
 			$this->render('train3',['set_name'=>$set->title]);
 		}else{
 			$this->render('train3',['set_name'=>$set->title]);
 		}
 	}
 
-	public function actionCreateWT($set,$mode){
+	//Gets data for training
+	public function actionGetData($set,$mode){
+		$result = $this->getData($set,$mode,$this->limitWTWordOnPage);
+		die(json_encode($result));
+	}
+
+	//Get all data
+	public function getData($set,$mode,$limit){
+		$result = [];
+		switch($mode){
+			case self::MODE_WORD_TO_TRANSLATE:
+			case self::MODE_TRANSLATE_TO_WORD:
+				$result = $this->getDataSimpleMode($set,$mode,$limit);
+				break;
+
+			case self::MODE_SPEECH:
+			case self::MODE_SPELL:
+				$result = $this->getDataSoundMode($set,$mode,$limit);
+				break;
+
+			case self::MODE_BRAIN_STORM:
+				$result = $this->getDataBrainStorm($set);
+				break;
+		}
+		return $result;
+	}
+
+	//TODO remove key id from result data because it already exists
+	function getSpecifiedDataByWord($set,$mode,$id,$word){
+		$result = null;
+		if($mode == self::MODE_WORD_TO_TRANSLATE){
+			$criteriaTR = new CDbCriteria;
+			$criteriaTR->limit = $this->limitWTTranslateOnPage-1;
+			$criteriaTR->select = array('id','translate');
+			$criteriaTR->order = 'RAND()';
+			$criteriaTR->addCondition('id_set = '.((int)$set).' AND id_word != '.$id);
+			$trRand = Translate::model()->findAll($criteriaTR);
+			$trArray = [];
+			foreach ($trRand as $key => $value){
+				$trArray[] = ['id'=>$value->id,'item'=>$value->translate,'is_true'=>"wrong"];
+			}
+			$trTrue = Translate::model()->findByAttributes(['id_set'=>(int)$set,'id_word'=>$id]);
+
+			$trTrue = ['id'=>$trTrue->id,'item'=>$trTrue->translate,'is_true'=>"right"];
+			$trArray[] = $trTrue;
+			shuffle($trArray);
+			$result = ['id'=>$id,'first'=>$word,'second'=>$trArray];
+		}else if($mode == self::MODE_TRANSLATE_TO_WORD){
+			$trMain = Translate::model()->findByAttributes(['id_set'=>(int)$set,'id_word'=>$id]);
+			$criteriaTR = new CDbCriteria;
+			$criteriaTR->limit = $this->limitWTTranslateOnPage-1;
+			$criteriaTR->select = array('id','word');
+			$criteriaTR->order = 'RAND()';
+			$criteriaTR->addCondition('id_set = '.((int)$set).' AND id != '.$id);
+			$trRand = Word::model()->findAll($criteriaTR);
+			$trArray = [];
+			foreach ($trRand as $key => $value){
+				$trArray[] = ['id'=>$value->id,'item'=>$value->word,'is_true'=>"wrong"];
+			}
+			$trTrue = ['id'=>$id,'item'=>$word,'is_true'=>"right"];
+			$trArray[] = $trTrue;
+			shuffle($trArray);
+			//id всегда id "word"
+			$result = ['id'=>$id,'first'=>$trMain->translate,'second'=>$trArray];
+		}else if($mode == self::MODE_SPELL || $mode == self::MODE_SPEECH){
+			$trMain = Translate::model()->findAllByAttributes(['id_set'=>(int)$set,'id_word'=>$id]);
+			$trs = [];
+			foreach ($trMain as $key => $value){
+				$trs[] = $value->translate;
+			}
+			$result = ['id'=>$id,'first'=>$word,'second'=>$trs];
+		}
+		return $result;
+	}
+
+	function getDataSimpleMode($set,$mode,$limit){
 		$criteria = new CDbCriteria;
-		$criteria->limit = $this->limitWTWordOnPage;
+		$criteria->limit = $limit;
 		$criteria->select = array('id','word');
 		$criteria->order = 'RAND()';
-		if($mode == 'wt'){
+		if($mode == self::MODE_WORD_TO_TRANSLATE){
 			$criteria->addCondition('id_set = '.((int)$set).' AND status_wt = 0');
-		}else if($mode == 'tw'){
+		}else if($mode == self::MODE_TRANSLATE_TO_WORD){
 			$criteria->addCondition('id_set = '.((int)$set).' AND status_tw = 0');
 		}
 		$word = Word::model()->findAll($criteria);
 		$result = [];
 		foreach ($word as $k=>$v){
-			if($mode == 'wt'){
-				$criteriaTR = new CDbCriteria;
-				$criteriaTR->limit = $this->limitWTTranslateOnPage-1;
-				$criteriaTR->select = array('id','translate');
-				$criteriaTR->order = 'RAND()';
-				$criteriaTR->addCondition('id_set = '.((int)$set).' AND id_word != '.$v->id);
-				$trRand = Translate::model()->findAll($criteriaTR);
-				$trArray = [];
-				foreach ($trRand as $key => $value){
-					$trArray[] = ['id'=>$value->id,'item'=>$value->translate,'is_true'=>"wrong"];
-				}
-				$trTrue = Translate::model()->findByAttributes(['id_set'=>(int)$set,'id_word'=>$v->id]);
-
-				$trTrue = ['id'=>$trTrue->id,'item'=>$trTrue->translate,'is_true'=>"right"];
-				$trArray[] = $trTrue;
-				shuffle($trArray);
-				$result[$v->id] = ['id'=>$v->id,'first'=>$v->word,'second'=>$trArray];
-			}else if($mode == 'tw'){
-				$trMain = Translate::model()->findByAttributes(['id_set'=>(int)$set,'id_word'=>$v->id]);
-				$criteriaTR = new CDbCriteria;
-				$criteriaTR->limit = $this->limitWTTranslateOnPage-1;
-				$criteriaTR->select = array('id','word');
-				$criteriaTR->order = 'RAND()';
-				$criteriaTR->addCondition('id_set = '.((int)$set).' AND id != '.$v->id);
-				$trRand = Word::model()->findAll($criteriaTR);
-				$trArray = [];
-				foreach ($trRand as $key => $value){
-					$trArray[] = ['id'=>$value->id,'item'=>$value->word,'is_true'=>"wrong"];
-				}
-				$trTrue = ['id'=>$v->id,'item'=>$v->word,'is_true'=>"right"];
-				$trArray[] = $trTrue;
-				shuffle($trArray);
-				//id всегда id "word"
-				$result[] = ['id'=>$v->id,'first'=>$trMain->translate,'second'=>$trArray];
-			}
+			$result[$v->id] = $this->getSpecifiedDataByWord($set,$mode,$v->id,$v->word);
 		}
-		
-		die(json_encode($result));
+
+		return $result;
 	}
 
-	/*public function actionCreateTW($set){
+	public function getDataSoundMode($set,$mode,$limit){
 		$criteria = new CDbCriteria;
-		$criteria->limit = $this->limitWTWordOnPage;
+		$criteria->limit = $limit;
 		$criteria->select = array('id','word');
 		$criteria->order = 'RAND()';
-		$criteria->addCondition('id_set = '.((int)$set).' AND status_wt = 0');
-
-		$word = Word::model()->findAll($criteria);
-		$result = [];
-		foreach ($word as $k=>$v){
-			
-		}
-		//die('[{"type":"wt","data":"hello","id":"4CE2889A-FC3B-4AD5-80F9-83D1B31EC8FA"}]');
-		//'[{"data":"hello","id":"4C31C2E8-A0E1-4714-8F2C-2E49F1FCAE0B","type":"wt"}]'
-		die(json_encode($result));
-	}
-
-	public function actionWt($set){
-		//$data = $this->createWT($set);
-		$data = "";
-		$set = Set::model()->findByAttributes(['id'=>(int)$set]);
-		$this->render('train',['data'=>$data,'set_name'=>$set->title]);
-	}
-
-	public function actionTw($set){
-		$data = $this->createTW($set);
-		$set = Set::model()->findByAttributes(['id'=>(int)$set]);
-		$this->render('wt',['data'=>$data,'set_name'=>$set->title]);
-	}*/
-
-	public function actionCreateWrite($set,$mode){
-		$criteria = new CDbCriteria;
-		$criteria->limit = $this->limitWTWordOnPage;
-		$criteria->select = array('id','word');
-		$criteria->order = 'RAND()';
-		if($mode == 'sw'){
+		if($mode == self::MODE_SPEECH){
 			$criteria->addCondition('id_set = '.((int)$set).' AND status_speech = 0');
-		}else if($mode == 'pw'){
+		}else if($mode == self::MODE_SPELL){
 			$criteria->addCondition('id_set = '.((int)$set).' AND status_spell = 0');
 		}
 		$word = Word::model()->findAll($criteria);
 		$result = [];
 		foreach ($word as $k=>$v){
-			$trMain = Translate::model()->findAllByAttributes(['id_set'=>(int)$set,'id_word'=>$v->id]);
-			$trs = [];
-			foreach ($trMain as $key => $value){
-				$trs[] = $value->translate;
-			}
-			$result[] = ['id'=>$v->id,'first'=>$v->word,'second'=>$trs];
+			$result[$v->id] = $this->getSpecifiedDataByWord($set,$mode,$v->id,$v->word);
 		}
-		die(json_encode($result));
+		return $result;
+	}
+
+	public function getDataBrainStorm($set){
+		$limit = 5;
+		$result = [];
+		foreach($this->allowModes as $v){
+			$result[$v] = $this->getData($set,$v,$limit);
+		}
+		return $result;
 	}
 
 	public function actionSave($data,$mode){
@@ -155,16 +178,16 @@ class TrainController extends Controller
 		foreach($data as $key => $value){
 			$word = Word::model()->findByAttributes(["id"=>$value->word_id]);
 			switch ($mode){
-				case 'wt':
+				case self::MODE_WORD_TO_TRANSLATE:
 					$word->status_wt = (int)$value->answ;
 					break;
-				case 'tw':
+				case self::MODE_TRANSLATE_TO_WORD:
 					$word->status_tw = (int)$value->answ;
 					break;
-				case 'vr':
+				case self::MODE_SPEECH:
 					$word->status_speech= (int)$value->answ;
 					break;
-				case 'tr':
+				case self::MODE_SPELL:
 					$word->status_spell = (int)$value->answ;
 					break;
 				default:

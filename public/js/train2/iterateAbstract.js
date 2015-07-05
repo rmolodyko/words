@@ -39,6 +39,18 @@ window.Train.iterateAbstract = function(mode,setId){
 			case 'wt':{
 				return (new Train.trainWtClass());
 			}
+			case 'tw':{
+				return (new Train.trainWtClass());
+			}
+			case 'pw':{
+				return (new Train.trainWtClass());
+			}
+			case 'sw':{
+				return (new Train.trainWtClass());
+			}
+			case 'bs':{
+				return (new Train.trainBsClass());
+			}
 		}
 		return null;
 	};

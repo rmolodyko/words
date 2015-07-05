@@ -7,8 +7,8 @@
  */
 $(document).ready(function(){
 	l('hello world',1);
-	var mode = 'wt';
-	var sett = 1;
-	(new Train.multiIterateClass(mode,sett));
-	(new Train.loadClass(mode,sett)).load();
+	var mode = 'bs';
+	var setId = 1;
+	(new Train.multiIterateClass(mode,setId));
+	(new Train.loadClass(mode,setId)).load();
 });

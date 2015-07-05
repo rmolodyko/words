@@ -15,7 +15,7 @@ if(window.Train == undefined) window.Train = {};
 //TODO Maybe need add handler on the first load of data from server
 window.Train.loadClass = function(mode,setId){
 
-	this.url = '/?r=train/createWT';
+	this.url = '/?r=train/getData';
 	this.set = setId;
 	this.mode = mode;
 
