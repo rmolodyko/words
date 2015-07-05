@@ -7,8 +7,12 @@
  */
 $(document).ready(function(){
 	l('hello world',1);
-	var mode = 'bs';
+	var mode = 'wt';
 	var setId = 1;
-	(new Train.multiIterateClass(mode,setId));
+	if(mode == 'bs'){
+		(new Train.multiIterateClass(mode,setId));
+	}else{
+		(new Train.defaultIterateClass(mode,setId));
+	}
 	(new Train.loadClass(mode,setId)).load();
 });

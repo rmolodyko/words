@@ -36,7 +36,7 @@ window.Train.dataClass = function(dataFromServer){
 		if(this.dataFromServer[i] != undefined)
 		if(-1 != this.keys.indexOf(i)){
 			var count = this.keys.indexOf(i);
-			l('keys',count);
+			//l('keys',count);
 			delete this.keys[count];
 			delete this.dataFromServer[i];
 			this.keys = this.reIndex(this.keys);

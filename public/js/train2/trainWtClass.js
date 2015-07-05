@@ -19,7 +19,7 @@ window.Train.trainWtClass = function(){
 		this.handler = handler;
 	}
 	this.run = function(data){
-		l('start train for mode = wt',data);
+		l('--',data);
 		this.someMethod(data);
 	}
 	this.someMethod = function(data){

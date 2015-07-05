@@ -16,7 +16,6 @@ window.Train.iterateAbstract = function(mode,setId){
 
 	this.mode = mode;
 	this.set = setId;
-	this.counter = 0;
 
 	//Transmits current context into calls function instead context of default
 	this.proxy = function(fn){
@@ -24,12 +23,6 @@ window.Train.iterateAbstract = function(mode,setId){
 		return function(){
 			fn.apply(self,arguments);
 		}
-	};
-
-	//Method is called when single page will be ended
-	this.edge = function(results){
-		l('end of train for mode = '+this.mode,results);
-		$.publish('iterate');
 	};
 
 	//Method returns instance of appropriate class
