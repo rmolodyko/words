@@ -9,13 +9,17 @@ if(window.Engine == undefined)
 /**
  * Responsible for including and initialization another class in modules
  * @constructor
+ * @param path Path to scripts without final slash
+ * @param array classNames is the array of object which consists of such fields:
+ *        string name - is the name of script with module name, sample "engine/include.js"
+ *        function callback - is the function call back which will be called when the script will be loaded
+ * @param function mainCallback is the function which will called when all of classes will iterated
  */
-window.Engine.LoaderClass = function(){
+window.Engine.LoaderClass = function(path,classNames,mainCallback){
 
 	//First part path to js script
 	this.mainPath = null;
 
-	//Set the url
 	/**
 	 * Set path to location of scripts
 	 * @param path Path to scripts without final slash
@@ -36,37 +40,62 @@ window.Engine.LoaderClass = function(){
 	/**
 	 * Include scripts
 	 * @param array classNames is the array of object which consists of such fields:
-	 *              name - is the name of script with module name, sample "engine/include.js"
-	 *              callback - is the function call back which will be called when the script will be loaded
+	 *        string name - is the name of script with module name, sample "engine/include.js"
+	 *        function callback - is the function call back which will be called when the script will be loaded
+	 * @param function mainCallback is the function which will called when all of classes will iterated
 	 */
-	this.includeClass = function(classNames){
+	this.includeClass = function(classNames,mainCallback){
 		if(classNames != undefined){
+
+			//Count of iterates
+			var countOfClasses = classNames.length;
+			var currentIterate = 1;
 
 			//Iterate all classes
 			for(var klass in classNames){
 
-				//Get class objects
-				klass = classNames[klass];
+				//The value save true if it is last of iteration
+				var isLastIterate = currentIterate === countOfClasses;
 
-				//Get class name
-				var name = (klass['name'] == undefined) ? klass.toString() : klass.name;
+				//Call anonymous function for creating closure and save right local values
+				(function(self,isLastIterate){
+					//Get class objects
+					klass = classNames[klass];
 
-				//Get callback function
-				var callback = (klass['callback'] == undefined) ? null : klass.callback;
+					//Get class name
+					var name = (klass['name'] == undefined) ? klass.toString() : klass.name;
 
-				//Get the script
-				$.getScript(this.getMainPath() + name, callback);
+					//Get callback function
+					var callback = (klass['callback'] == undefined) ? null : klass.callback;
+
+					//Get the script
+					$.getScript(self.getMainPath() + name, function(){
+
+						//Call local callback for particular class if the callback is exists
+						if(typeof callback === 'function')
+							callback();
+
+						//If the main callback is the function and it is the last of class was iterated then call main callback
+						if(typeof mainCallback === 'function')
+							if(isLastIterate){
+								mainCallback();
+							}
+					});
+
+				})(this,isLastIterate);
+
+				//Increase count
+				currentIterate++;
 			}
 		}
 	};
+
+	//Set up main path
+	if(path != undefined)
+		this.setMainPath(path);
+
+	//Include classes if the data passed into constructor of class
+	if(classNames != undefined)
+		this.includeClass(classNames,mainCallback);
 }
 
-//Test results
-$(document).ready(function(){
-	var init = new Engine.LoaderClass();
-	init.setMainPath('/public/js');
-	init.includeClass([{name:'engine/logger.js',callback:function(){
-		l('i was loaded');
-		alert('the class logger was loaded');
-	}}]);
-});

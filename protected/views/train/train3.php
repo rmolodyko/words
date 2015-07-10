@@ -8,7 +8,7 @@
 <script src="public/js/sound.js"></script>
 
 <script src="public/js/engine/LoaderClass.js"></script>
-<script src="public/js/train2/trainAbstract.js"></script>
+<!--<script src="public/js/train2/trainAbstract.js"></script>
 <script src="public/js/train2/pubsub.js"></script>
 <script src="public/js/train2/loadClass.js"></script>
 <script src="public/js/train2/dataClass.js"></script>
@@ -17,8 +17,9 @@
 <script src="public/js/train2/defaultIterateClass.js"></script>
 <script src="public/js/train2/multiIterateClass.js"></script>
 <script src="public/js/train2/trainWtClass.js"></script>
-<script src="public/js/train2/trainBsClass.js"></script>
+<script src="public/js/train2/trainBsClass.js"></script>-->
 <script src="public/js/train2/init.js"></script>
+<script src="public/js/engine/init.js"></script>
 
 <div class="control">
 
