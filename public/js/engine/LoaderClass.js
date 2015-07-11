@@ -34,7 +34,7 @@ window.Engine.LoaderClass = function(path,classNames,mainCallback){
 	 * @returns {string}
 	 */
 	this.getMainPath = function(){
-		return this.mainPath + '/';
+		return this.mainPath;
 	}
 
 	/**
@@ -46,6 +46,8 @@ window.Engine.LoaderClass = function(path,classNames,mainCallback){
 	 */
 	this.includeClass = function(classNames,mainCallback){
 		if(classNames != undefined){
+
+			console.log(classNames);
 
 			//Count of iterates
 			var countOfClasses = classNames.length;
@@ -68,6 +70,8 @@ window.Engine.LoaderClass = function(path,classNames,mainCallback){
 					//Get callback function
 					var callback = (klass['callback'] == undefined) ? null : klass.callback;
 
+					console.log(name);
+
 					//Get the script
 					$.getScript(self.getMainPath() + name, function(){
 
@@ -89,6 +93,36 @@ window.Engine.LoaderClass = function(path,classNames,mainCallback){
 			}
 		}
 	};
+
+	/**
+	 * Class includes scripts which located in particular directory
+	 * @param path local path to directory for example: /engine
+	 * @param excludedClass array which excluded specified classes with loading
+	 * @param callback function which will called after loaded the classes
+	 */
+	this.loadModule = function(path,excludedClass,callback){
+		//Save context
+		var self = this;
+
+		//Get request
+		$.get('/?r=pyramid/loader/getClassesOfPath&path=engine&recursion=true',{path:path}).done(function(response){
+			var response = JSON.parse(response);
+			if(response.status == 1){
+				var localPath = response.localPath;
+				var classes = response.classes;
+				for(var i in classes){
+					//Delete from results classes excluded classes
+					if($.inArray(classes[i].replace(/^(.*\/)|(.*\\)/g,""),excludedClass) != -1){
+						delete classes[i];
+					}
+				}
+
+				//Call loading on the client
+				self.setMainPath(localPath);
+				self.includeClass(classes,callback);
+			}
+		});
+	}
 
 	//Set up main path
 	if(path != undefined)

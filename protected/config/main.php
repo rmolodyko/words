@@ -27,6 +27,7 @@ return array(
 			'allowAutoLogin'=>true,
 			'loginUrl'=>array('site/login'),
 		),
+		'pyramid'=>array('class'=>'Pyramid'),
 		/*'db'=>array(
 			'connectionString' => 'sqlite:protected/data/blog.db',
 			'tablePrefix' => 'tbl_',
@@ -76,10 +77,8 @@ return array(
         'gii'=>array(
             'class'=>'system.gii.GiiModule',
             'password'=>'1234',
-            // 'ipFilters'=>array(...a list of IPs...),
-            // 'newFileMode'=>0666,
-            // 'newDirMode'=>0777,
         ),
+		'pyramid'
     ),
 
 	// application-level parameters that can be accessed

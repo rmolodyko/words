@@ -18,7 +18,7 @@
 <script src="public/js/train2/multiIterateClass.js"></script>
 <script src="public/js/train2/trainWtClass.js"></script>
 <script src="public/js/train2/trainBsClass.js"></script>-->
-<script src="public/js/train2/init.js"></script>
+<!--<script src="public/js/train2/init.js"></script>-->
 <script src="public/js/engine/init.js"></script>
 
 <div class="control">

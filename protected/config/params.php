@@ -2,6 +2,8 @@
 
 // this contains the application parameters that can be maintained via GUI
 return array(
+	'pathToResource'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'public',
+
 	// this is displayed in the header section
 	'title'=>'My Yii Blog',
 	// this is used in error pages
