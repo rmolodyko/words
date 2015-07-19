@@ -8,9 +8,20 @@ $(document).ready(function(){
 
 	function afterLoadClasses(){
 		console.log('load1 was completed');
-		window.startTrain();
+
+		l(Pyramid.Class);
+
+		var Class1 = Pyramid.Class.create(null,{val9:'val9'});
+		var Class2 = Pyramid.Class.create(Class1,{val1:'val1',__construct:function(){
+			this.parent();
+		}});
+
+		var obj1 = new Class2;
+
+		console.log(obj1,obj1.val9);
+
 	}
 
-	init.loadModule('/engine',['init.js','LoaderClass.js'],null);
-	init.loadModule('/train2',null,afterLoadClasses);
+	init.loadModule('/engine',['init.js','LoaderClass.js'],afterLoadClasses);
+	//init.loadModule('/train2',null,afterLoadClasses);
 });

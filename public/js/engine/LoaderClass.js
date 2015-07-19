@@ -47,8 +47,6 @@ window.Engine.LoaderClass = function(path,classNames,mainCallback){
 	this.includeClass = function(classNames,mainCallback){
 		if(classNames != undefined){
 
-			console.log(classNames);
-
 			//Count of iterates
 			var countOfClasses = classNames.length;
 			var currentIterate = 1;
@@ -69,8 +67,6 @@ window.Engine.LoaderClass = function(path,classNames,mainCallback){
 
 					//Get callback function
 					var callback = (klass['callback'] == undefined) ? null : klass.callback;
-
-					console.log(name);
 
 					//Get the script
 					$.getScript(self.getMainPath() + name, function(){
@@ -105,7 +101,7 @@ window.Engine.LoaderClass = function(path,classNames,mainCallback){
 		var self = this;
 
 		//Get request
-		$.get('/?r=pyramid/loader/getClassesOfPath&path=engine&recursion=true',{path:path}).done(function(response){
+		$.get('/?r=pyramid/loader/getClassesOfPath&recursion=true',{path:path}).done(function(response){
 			var response = JSON.parse(response);
 			if(response.status == 1){
 				var localPath = response.localPath;
@@ -116,6 +112,9 @@ window.Engine.LoaderClass = function(path,classNames,mainCallback){
 						delete classes[i];
 					}
 				}
+
+				//Parse object classes into array for correct count of last element
+				classes = $.map(classes,function(v,i){return v});
 
 				//Call loading on the client
 				self.setMainPath(localPath);
